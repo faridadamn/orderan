@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <main class="shell">
@@ -37,6 +36,6 @@
   <dialog id="orderDialog"><form id="orderForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3 id="orderDialogTitle">Tambah order</h3><button type="button" class="close-btn">×</button></div><input id="orderSegment" type="hidden"><label>Nominal<input id="orderAmount" type="number" required min="0" inputmode="numeric" placeholder="130000"></label><div class="two-col"><label>Jarak (km)<input id="orderDistance" type="number" step="0.1" min="0" placeholder="52.7"></label><label>Jumlah titik<input id="deliveryPoints" type="number" min="1" value="1"></label></div><label>Platform<select id="platform"><option>Gojek</option><option>Grab</option><option>Lalamove</option><option>Maxim</option><option>Lainnya</option></select></label><div class="two-col"><label>Pickup<input id="pickupArea" placeholder="Kembangan"></label><label>Tujuan<input id="destinationArea" placeholder="Benda"></label></div><label>Catatan<textarea id="orderNotes" rows="2" placeholder="Opsional"></textarea></label><button class="btn primary" type="submit">Simpan order</button></form></dialog>
   <dialog id="expenseDialog"><form id="expenseForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Tambah biaya</h3><button type="button" class="close-btn">×</button></div><label>Kategori<select id="expenseCategory"><option value="fuel">Bensin</option><option value="meal">Makan</option><option value="toll">Tol</option><option value="parking">Parkir</option><option value="maintenance">Servis</option><option value="mobile_data">Kuota</option><option value="other">Lainnya</option></select></label><label>Nominal<input id="expenseAmount" type="number" required min="1" placeholder="30000"></label><label>Catatan<input id="expenseNotes" placeholder="Opsional"></label><button class="btn primary" type="submit">Simpan biaya</button></form></dialog>
   <dialog id="buildDialog"><form id="buildForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Update income lain</h3><button type="button" class="close-btn">×</button></div><label>Durasi fokus (menit)<input id="buildMinutesInput" type="number" min="0" value="0"></label><label>Output hari ini<textarea id="buildOutputInput" rows="3" placeholder="Contoh: landing page jasa selesai"></textarea></label><label>Skor energi<select id="energyScoreInput"><option value="">Belum diisi</option><option value="1">1 — Habis</option><option value="2">2 — Rendah</option><option value="3">3 — Cukup</option><option value="4">4 — Bagus</option><option value="5">5 — Prima</option></select></label><button class="btn primary" type="submit">Simpan progres</button></form></dialog>
-  <div id="toast" class="toast"></div><script src="app.js"></script>
+  <div id="toast" class="toast"></div><script src="app.js?v=2"></script>
 </body>
 </html>
