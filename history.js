@@ -2,19 +2,24 @@
   const historyList = document.getElementById('historyList');
   if (!historyList) return;
 
+  let latestRows = [];
+  const originalRenderHistory = window.renderHistory;
+
+  if (typeof originalRenderHistory === 'function') {
+    window.renderHistory = function patchedRenderHistory(rows) {
+      latestRows = Array.isArray(rows) ? rows : [];
+      originalRenderHistory(rows);
+      attachHistoryLinks();
+    };
+  }
+
   function attachHistoryLinks() {
-    historyList.querySelectorAll('.history-item').forEach((item) => {
-      if (item.dataset.clickReady === '1') return;
-
-      const title = item.querySelector('h4')?.textContent || '';
-      const matchedDate = title.match(/(\d{1,2})\s([A-Za-z]{3})/);
-      const rowIndex = Array.from(historyList.querySelectorAll('.history-item')).indexOf(item);
-      const rows = window.__orderanHistoryRows || [];
-      const row = rows[rowIndex];
-
-      if (!row?.work_date) return;
+    historyList.querySelectorAll('.history-item').forEach((item, index) => {
+      const row = latestRows[index];
+      if (!row?.work_date || item.dataset.clickReady === '1') return;
 
       item.dataset.clickReady = '1';
+      item.dataset.workDate = row.work_date;
       item.setAttribute('role', 'link');
       item.setAttribute('tabindex', '0');
       item.setAttribute('aria-label', `Buka detail ${row.work_date}`);
@@ -33,10 +38,4 @@
       });
     });
   }
-
-  const observer = new MutationObserver(attachHistoryLinks);
-  observer.observe(historyList, { childList: true, subtree: true });
-
-  document.addEventListener('orderan:history-rendered', attachHistoryLinks);
-  setTimeout(attachHistoryLinks, 500);
 })();
