@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Detail Harian — Orderan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell detail-shell">
+    <header class="detail-header">
+      <button id="backBtn" class="icon-btn" aria-label="Kembali">←</button>
+      <div><p class="eyebrow">DETAIL HARIAN</p><h1 id="detailDate">Memuat...</h1></div>
+    </header>
+
+    <section id="detailContent" class="hidden">
+      <section class="hero-card detail-hero">
+        <p class="muted-light">Pendapatan bersih</p>
+        <h2 id="detailNet">Rp0</h2>
+        <div class="detail-meta"><span id="detailDayType">Cash Day</span><span id="detailStatus">Selesai</span></div>
+      </section>
+
+      <section class="section-head"><h3>Ringkasan uang</h3></section>
+      <section class="stats-grid">
+        <article class="stat-card"><span>Pagi</span><strong id="detailMorning">Rp0</strong><small id="detailMorningTarget">Target Rp0</small></article>
+        <article class="stat-card"><span>Pulang</span><strong id="detailReturn">Rp0</strong><small id="detailReturnTarget">Target Rp0</small></article>
+        <article class="stat-card"><span>Pengeluaran</span><strong id="detailExpense">Rp0</strong><small>Biaya operasional</small></article>
+        <article class="stat-card accent"><span>Kotor</span><strong id="detailGross">Rp0</strong><small id="detailOrders">0 order</small></article>
+      </section>
+
+      <section class="section-head"><h3>Durasi kerja</h3></section>
+      <section class="card detail-card">
+        <div class="detail-time-grid">
+          <div><span>Onbid</span><strong id="detailOnbid">0j 0m</strong></div>
+          <div><span>In-app</span><strong id="detailInApp">0j 0m</strong></div>
+          <div><span>Total online</span><strong id="detailOnline">0j 0m</strong></div>
+        </div>
+        <div class="detail-period"><span id="detailStart">Mulai —</span><span id="detailEnd">Selesai —</span></div>
+      </section>
+
+      <section class="section-head"><h3>Daftar order</h3></section>
+      <div id="orderList" class="detail-list"></div>
+
+      <section class="section-head"><h3>Pengeluaran</h3></section>
+      <div id="expenseList" class="detail-list"></div>
+
+      <section class="section-head"><h3>Income lain</h3></section>
+      <section class="card detail-card">
+        <div class="build-row"><strong id="detailBuildMinutes">0 menit</strong><span id="detailEnergy">Energi belum diisi</span></div>
+        <p id="detailBuildOutput" class="muted">Belum ada output.</p>
+      </section>
+    </section>
+
+    <section id="detailError" class="card detail-error hidden"></section>
+  </main>
+  <script src="detail.js?v=1"></script>
+</body>
+</html>
