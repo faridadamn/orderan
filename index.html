@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <main class="shell">
@@ -36,6 +36,7 @@
           <span>In-app <strong id="inAppDuration">0j 0m</strong></span>
           <span>Total <strong id="totalOnlineDuration">0j 0m</strong></span>
         </div>
+        <div id="gpsStatus" class="gps-status">GPS akan direkam saat status berubah.</div>
         <div class="timer-actions">
           <button id="startOnbidBtn" class="timer-btn primary-timer">Mulai onbid</button>
           <button id="startInAppBtn" class="timer-btn hidden">Dapat order</button>
@@ -59,7 +60,8 @@
   <dialog id="buildDialog"><form id="buildForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Update income lain</h3><button type="button" class="close-btn">×</button></div><label>Durasi fokus (menit)<input id="buildMinutesInput" type="number" min="0" value="0"></label><label>Output hari ini<textarea id="buildOutputInput" rows="3" placeholder="Contoh: landing page jasa selesai"></textarea></label><label>Skor energi<select id="energyScoreInput"><option value="">Belum diisi</option><option value="1">1 — Habis</option><option value="2">2 — Rendah</option><option value="3">3 — Cukup</option><option value="4">4 — Bagus</option><option value="5">5 — Prima</option></select></label><button class="btn primary" type="submit">Simpan progres</button></form></dialog>
   <div id="toast" class="toast"></div>
   <script src="app.js?v=3"></script>
-  <script src="timer.js?v=1"></script>
+  <script src="timer.js?v=2"></script>
+  <script src="gps.js?v=1"></script>
   <script src="history-links.js?v=2"></script>
 </body>
 </html>
