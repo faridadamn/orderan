@@ -22,8 +22,28 @@
         <p id="authMessage" class="form-message"></p>
       </form>
     </section>
+
     <section id="appView" class="app-view hidden">
       <header class="topbar"><div><p class="eyebrow">ORDERAN</p><h1 id="greeting">Hari ini</h1></div><button id="logoutBtn" class="icon-btn" aria-label="Keluar">↗</button></header>
+
+      <section class="timer-card">
+        <div class="timer-top">
+          <div><p class="eyebrow">STATUS KERJA</p><h2 id="activityStatus">Offbid</h2></div>
+          <div id="liveTimer" class="live-timer">00:00:00</div>
+        </div>
+        <div class="timer-summary">
+          <span>Onbid <strong id="onbidDuration">0j 0m</strong></span>
+          <span>In-app <strong id="inAppDuration">0j 0m</strong></span>
+          <span>Total <strong id="totalOnlineDuration">0j 0m</strong></span>
+        </div>
+        <div class="timer-actions">
+          <button id="startOnbidBtn" class="timer-btn primary-timer">Mulai onbid</button>
+          <button id="startInAppBtn" class="timer-btn hidden">Dapat order</button>
+          <button id="finishOrderBtn" class="timer-btn hidden">Selesai order</button>
+          <button id="offbidBtn" class="timer-btn danger-timer hidden">Offbid</button>
+        </div>
+      </section>
+
       <section class="hero-card"><div class="hero-top"><div><p class="muted-light">Pendapatan bersih bulan ini</p><h2 id="monthNet">Rp0</h2></div><span id="workDayCount" class="pill">0 hari</span></div><div class="progress-track"><div id="monthProgress" class="progress-fill"></div></div><div class="hero-meta"><span>Target Rp6 jt</span><span id="monthPercent">0%</span></div></section>
       <section class="section-head"><h3>Hari ini</h3><button id="openWorkDayBtn" class="text-btn">Atur hari</button></section>
       <section class="stats-grid"><article class="stat-card"><span>Pagi</span><strong id="todayMorning">Rp0</strong><small id="morningTargetLabel">Target Rp50 rb</small></article><article class="stat-card"><span>Pulang</span><strong id="todayReturn">Rp0</strong><small id="returnTargetLabel">Target Rp120 rb</small></article><article class="stat-card"><span>Pengeluaran</span><strong id="todayExpense">Rp0</strong><small>Biaya hari ini</small></article><article class="stat-card accent"><span>Bersih</span><strong id="todayNet">Rp0</strong><small>Setelah biaya</small></article></section>
@@ -32,10 +52,11 @@
       <section class="section-head"><h3>Riwayat 7 hari</h3></section><div id="historyList" class="history-list"></div>
     </section>
   </main>
+
   <dialog id="workDayDialog"><form id="workDayForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Atur hari kerja</h3><button type="button" class="close-btn">×</button></div><label>Jenis hari<select id="dayType"><option value="cash">Cash Day</option><option value="build">Build Day</option><option value="home_standby">Standby Rajeg</option><option value="off">Libur</option></select></label><div class="two-col"><label>Target pagi<input id="morningTarget" type="number" value="50000" min="0"></label><label>Target pulang<input id="returnTarget" type="number" value="120000" min="0"></label></div><button class="btn primary" type="submit">Simpan</button></form></dialog>
   <dialog id="orderDialog"><form id="orderForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3 id="orderDialogTitle">Tambah order</h3><button type="button" class="close-btn">×</button></div><input id="orderSegment" type="hidden"><label>Nominal<input id="orderAmount" type="number" required min="0" inputmode="numeric" placeholder="130000"></label><div class="two-col"><label>Jarak (km)<input id="orderDistance" type="number" step="0.1" min="0" placeholder="52.7"></label><label>Jumlah titik<input id="deliveryPoints" type="number" min="1" value="1"></label></div><label>Platform<select id="platform"><option>Gojek</option><option>Grab</option><option>Lalamove</option><option>Maxim</option><option>Lainnya</option></select></label><div class="two-col"><label>Pickup<input id="pickupArea" placeholder="Kembangan"></label><label>Tujuan<input id="destinationArea" placeholder="Benda"></label></div><label>Catatan<textarea id="orderNotes" rows="2" placeholder="Opsional"></textarea></label><button class="btn primary" type="submit">Simpan order</button></form></dialog>
   <dialog id="expenseDialog"><form id="expenseForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Tambah biaya</h3><button type="button" class="close-btn">×</button></div><label>Kategori<select id="expenseCategory"><option value="fuel">Bensin</option><option value="meal">Makan</option><option value="toll">Tol</option><option value="parking">Parkir</option><option value="maintenance">Servis</option><option value="mobile_data">Kuota</option><option value="other">Lainnya</option></select></label><label>Nominal<input id="expenseAmount" type="number" required min="1" placeholder="30000"></label><label>Catatan<input id="expenseNotes" placeholder="Opsional"></label><button class="btn primary" type="submit">Simpan biaya</button></form></dialog>
   <dialog id="buildDialog"><form id="buildForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Update income lain</h3><button type="button" class="close-btn">×</button></div><label>Durasi fokus (menit)<input id="buildMinutesInput" type="number" min="0" value="0"></label><label>Output hari ini<textarea id="buildOutputInput" rows="3" placeholder="Contoh: landing page jasa selesai"></textarea></label><label>Skor energi<select id="energyScoreInput"><option value="">Belum diisi</option><option value="1">1 — Habis</option><option value="2">2 — Rendah</option><option value="3">3 — Cukup</option><option value="4">4 — Bagus</option><option value="5">5 — Prima</option></select></label><button class="btn primary" type="submit">Simpan progres</button></form></dialog>
-  <div id="toast" class="toast"></div><script src="app.js?v=2"></script>
+  <div id="toast" class="toast"></div><script src="app.js?v=3"></script>
 </body>
 </html>
