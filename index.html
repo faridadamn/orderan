@@ -45,7 +45,7 @@
         </div>
       </section>
 
-      <section class="hero-card"><div class="hero-top"><div><p class="muted-light">Pendapatan bersih bulan ini</p><h2 id="monthNet">Rp0</h2></div><span id="workDayCount" class="pill">0 hari</span></div><div class="progress-track"><div id="monthProgress" class="progress-fill"></div></div><div class="hero-meta"><span>Target Rp6 jt</span><span id="monthPercent">0%</span></div></section>
+      <section class="hero-card"><div class="hero-top"><div><p class="muted-light">Pendapatan kotor bulan ini</p><h2 id="monthNet">Rp0</h2></div><span id="workDayCount" class="pill">0 hari</span></div><div class="progress-track"><div id="monthProgress" class="progress-fill"></div></div><div class="hero-meta"><span>Target kotor Rp6 jt</span><span id="monthPercent">0%</span></div></section>
       <section class="section-head"><h3>Hari ini</h3><button id="openWorkDayBtn" class="text-btn">Atur hari</button></section>
       <section class="stats-grid"><article class="stat-card"><span>Pagi</span><strong id="todayMorning">Rp0</strong><small id="morningTargetLabel">Target Rp50 rb</small></article><article class="stat-card"><span>Pulang</span><strong id="todayReturn">Rp0</strong><small id="returnTargetLabel">Target Rp120 rb</small></article><article class="stat-card"><span>Pengeluaran</span><strong id="todayExpense">Rp0</strong><small>Biaya hari ini</small></article><article class="stat-card accent"><span>Bersih</span><strong id="todayNet">Rp0</strong><small>Setelah biaya</small></article></section>
       <section class="quick-actions"><button id="addMorningBtn" class="quick-btn"><span>＋</span>Order pagi</button><button id="addReturnBtn" class="quick-btn"><span>⌂</span>Order pulang</button><button id="addExpenseBtn" class="quick-btn"><span>−</span>Biaya</button></section>
@@ -60,6 +60,7 @@
   <dialog id="buildDialog"><form id="buildForm" method="dialog" class="dialog-card"><div class="dialog-head"><h3>Update income lain</h3><button type="button" class="close-btn">×</button></div><label>Durasi fokus (menit)<input id="buildMinutesInput" type="number" min="0" value="0"></label><label>Output hari ini<textarea id="buildOutputInput" rows="3" placeholder="Contoh: landing page jasa selesai"></textarea></label><label>Skor energi<select id="energyScoreInput"><option value="">Belum diisi</option><option value="1">1 — Habis</option><option value="2">2 — Rendah</option><option value="3">3 — Cukup</option><option value="4">4 — Bagus</option><option value="5">5 — Prima</option></select></label><button class="btn primary" type="submit">Simpan progres</button></form></dialog>
   <div id="toast" class="toast"></div>
   <script src="app.js?v=3"></script>
+  <script src="target-fix.js?v=1"></script>
   <script src="session-fix.js?v=1"></script>
   <script src="timer.js?v=2"></script>
   <script src="gps.js?v=1"></script>
