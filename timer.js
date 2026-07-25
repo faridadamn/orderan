@@ -37,12 +37,12 @@ function setTimerButtons(status) {
 
   document.querySelector('.timer-card')?.classList.toggle('is-active', status !== 'offbid');
   document.querySelector('.timer-card')?.classList.toggle('is-order', status === 'in_app');
+  window.updateGpsFab?.(status, activeActivity?.id || null);
 }
 
 function startLiveClock(startedAt) {
   timerStartedAt = startedAt ? new Date(startedAt) : null;
   clearInterval(timerTick);
-
   const render = () => {
     if (!timerStartedAt) {
       $('liveTimer').textContent = '00:00:00';
@@ -50,35 +50,27 @@ function startLiveClock(startedAt) {
     }
     $('liveTimer').textContent = clockLabel((Date.now() - timerStartedAt.getTime()) / 1000);
   };
-
   render();
   timerTick = setInterval(render, 1000);
 }
 
 async function getActiveActivity() {
-  const rows = await restQuery(
-    'ojol_activity_logs',
-    'select=*&ended_at=is.null&order=started_at.desc&limit=1'
-  );
+  const rows = await restQuery('ojol_activity_logs', 'select=*&ended_at=is.null&order=started_at.desc&limit=1');
   return rows?.[0] || null;
 }
 
 async function loadTimerStatus() {
   if (!user || !currentDay) return;
-
   try {
     const [summaryRows, active] = await Promise.all([
       restQuery('ojol_activity_summary', `select=*&work_day_id=eq.${currentDay.id}&limit=1`),
       getActiveActivity()
     ]);
-
     const summary = summaryRows?.[0] || {};
     activeActivity = active;
-
     $('onbidDuration').textContent = durationLabel(summary.onbid_minutes);
     $('inAppDuration').textContent = durationLabel(summary.in_app_minutes);
     $('totalOnlineDuration').textContent = durationLabel(summary.total_online_minutes);
-
     const status = active?.activity_type || 'offbid';
     setTimerButtons(status);
     startLiveClock(active?.started_at || null);
@@ -91,17 +83,12 @@ async function loadTimerStatus() {
 async function closeActiveActivity() {
   const active = await getActiveActivity();
   if (!active) return null;
-  await updateRows(
-    'ojol_activity_logs',
-    `id=eq.${active.id}`,
-    { ended_at: new Date().toISOString() }
-  );
+  await updateRows('ojol_activity_logs', `id=eq.${active.id}`, { ended_at: new Date().toISOString() });
   return active;
 }
 
 async function startActivity(type) {
   if (!currentDay) currentDay = await ensureWorkDay();
-
   await closeActiveActivity();
   const created = await insertRow('ojol_activity_logs', {
     work_day_id: currentDay.id,
@@ -109,15 +96,10 @@ async function startActivity(type) {
     started_at: new Date().toISOString()
   });
   const activity = created?.[0] || null;
-
-  const workDayUpdate = {
-    status: 'active',
-    end_time: null
-  };
+  const workDayUpdate = { status: 'active', end_time: null };
   if (!currentDay.start_time) workDayUpdate.start_time = new Date().toISOString();
   await updateRows('ojol_work_days', `id=eq.${currentDay.id}`, workDayUpdate);
   currentDay = { ...currentDay, ...workDayUpdate };
-
   await loadTimerStatus();
   return activity;
 }
@@ -127,9 +109,7 @@ $('startOnbidBtn').addEventListener('click', async () => {
     const activity = await startActivity('onbid');
     emitActivityEvent('onbid_start', activity?.id || null);
     toast('Onbid dimulai');
-  } catch (error) {
-    toast(error.message || 'Gagal memulai onbid');
-  }
+  } catch (error) { toast(error.message || 'Gagal memulai onbid'); }
 });
 
 $('startInAppBtn').addEventListener('click', async () => {
@@ -137,9 +117,7 @@ $('startInAppBtn').addEventListener('click', async () => {
     const activity = await startActivity('in_app');
     emitActivityEvent('order_start', activity?.id || null);
     toast('Status berubah ke in-app');
-  } catch (error) {
-    toast(error.message || 'Gagal mengubah status');
-  }
+  } catch (error) { toast(error.message || 'Gagal mengubah status'); }
 });
 
 $('finishOrderBtn').addEventListener('click', async () => {
@@ -148,27 +126,20 @@ $('finishOrderBtn').addEventListener('click', async () => {
     await startActivity('onbid');
     emitActivityEvent('order_finish', orderActivity?.id || null);
     toast('Order selesai, kembali onbid');
-  } catch (error) {
-    toast(error.message || 'Gagal menyelesaikan order');
-  }
+  } catch (error) { toast(error.message || 'Gagal menyelesaikan order'); }
 });
 
 $('offbidBtn').addEventListener('click', async () => {
   try {
     const closed = await closeActiveActivity();
-    await updateRows('ojol_work_days', `id=eq.${currentDay.id}`, {
-      status: 'completed',
-      end_time: new Date().toISOString()
-    });
+    await updateRows('ojol_work_days', `id=eq.${currentDay.id}`, { status: 'completed', end_time: new Date().toISOString() });
     activeActivity = null;
     setTimerButtons('offbid');
     startLiveClock(null);
     await loadTimerStatus();
     emitActivityEvent('offbid', closed?.id || null);
     toast('Offbid. Hari kerja selesai');
-  } catch (error) {
-    toast(error.message || 'Gagal offbid');
-  }
+  } catch (error) { toast(error.message || 'Gagal offbid'); }
 });
 
 async function waitForTimerReady() {
