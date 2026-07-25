@@ -1,4 +1,5 @@
 let gpsBusy = false;
+let gpsFabActivityId = null;
 
 const gpsStatus = (message, state = '') => {
   const el = document.getElementById('gpsStatus');
@@ -18,18 +19,29 @@ const getCurrentPosition = () => new Promise((resolve, reject) => {
 
 async function getLatestGpsPoint() {
   if (!currentDay) return null;
-  const rows = await restQuery(
-    'ojol_gps_points',
-    `select=*&work_day_id=eq.${currentDay.id}&order=captured_at.desc&limit=1`
-  );
+  const rows = await restQuery('ojol_gps_points', `select=*&work_day_id=eq.${currentDay.id}&order=captured_at.desc&limit=1`);
   return rows?.[0] || null;
+}
+
+async function checkpointCount(activityLogId) {
+  if (!activityLogId) return 0;
+  const rows = await restQuery('ojol_gps_points', `select=id&activity_log_id=eq.${activityLogId}&event_type=eq.manual`);
+  return rows?.length || 0;
+}
+
+async function refreshCheckpointBadge() {
+  const badge = document.getElementById('gpsCheckpointCount');
+  if (!badge) return;
+  const count = await checkpointCount(gpsFabActivityId);
+  badge.textContent = String(count);
+  badge.classList.toggle('hidden', count === 0);
 }
 
 function legType(previousEvent, currentEvent) {
   if (currentEvent === 'offbid') return 'return_home';
-  if (currentEvent === 'order_finish') return 'order_trip';
   if (currentEvent === 'order_start') return 'empty_to_order';
-  if (previousEvent === 'order_finish' && currentEvent === 'order_start') return 'empty_to_order';
+  if (currentEvent === 'manual' || currentEvent === 'order_finish') return 'order_trip';
+  if ((previousEvent === 'order_finish' || previousEvent === 'manual') && currentEvent === 'order_start') return 'empty_to_order';
   return 'general';
 }
 
@@ -45,15 +57,16 @@ async function calculateRoadRoute(fromPoint, toPoint) {
 }
 
 async function captureGpsEvent(eventType, activityLogId = null) {
-  if (gpsBusy || !currentDay) return;
+  if (gpsBusy || !currentDay) return null;
   gpsBusy = true;
-  gpsStatus('Mengambil GPS…', 'loading');
+  const fab = document.getElementById('gpsCheckpointFab');
+  if (fab) fab.disabled = true;
+  gpsStatus(eventType === 'manual' ? 'Mencatat titik perjalanan…' : 'Mengambil GPS…', 'loading');
 
   try {
     const previous = await getLatestGpsPoint();
     const position = await getCurrentPosition();
     const c = position.coords;
-
     const created = await insertRow('ojol_gps_points', {
       work_day_id: currentDay.id,
       activity_log_id: activityLogId || null,
@@ -69,16 +82,14 @@ async function captureGpsEvent(eventType, activityLogId = null) {
 
     const point = created?.[0];
     let routeLabel = '';
-
     if (previous && point && previous.id !== point.id) {
       try {
         const route = await calculateRoadRoute(previous, point);
-        const type = legType(previous.event_type, eventType);
         await insertRow('ojol_route_legs', {
           work_day_id: currentDay.id,
           from_point_id: previous.id,
           to_point_id: point.id,
-          leg_type: type,
+          leg_type: legType(previous.event_type, eventType),
           provider: 'osrm',
           profile: 'driving',
           distance_m: Math.round(route.distance),
@@ -94,7 +105,16 @@ async function captureGpsEvent(eventType, activityLogId = null) {
     }
 
     const accuracy = Number.isFinite(c.accuracy) ? `akurasi ±${Math.round(c.accuracy)} m` : 'akurasi tidak tersedia';
-    gpsStatus(`GPS tersimpan · ${accuracy}${routeLabel}`, 'success');
+    if (eventType === 'manual') {
+      await refreshCheckpointBadge();
+      const count = await checkpointCount(activityLogId);
+      gpsStatus(`Titik ${count} tersimpan · ${accuracy}${routeLabel}`, 'success');
+      toast(`Titik ${count} tersimpan`);
+      navigator.vibrate?.(60);
+    } else {
+      gpsStatus(`GPS tersimpan · ${accuracy}${routeLabel}`, 'success');
+    }
+    return point;
   } catch (error) {
     console.error(error);
     const message = error.code === 1
@@ -106,14 +126,40 @@ async function captureGpsEvent(eventType, activityLogId = null) {
           : (error.message || 'Gagal mengambil GPS');
     gpsStatus(message, 'error');
     toast(message);
+    return null;
   } finally {
     gpsBusy = false;
+    if (fab) fab.disabled = false;
   }
 }
 
-window.addEventListener('orderan:activity-changed', (event) => {
+window.updateGpsFab = async (status, activityLogId = null) => {
+  const fab = document.getElementById('gpsCheckpointFab');
+  if (!fab) return;
+  const visible = status === 'in_app' && !!activityLogId;
+  gpsFabActivityId = visible ? activityLogId : null;
+  fab.classList.toggle('hidden', !visible);
+  if (visible) await refreshCheckpointBadge();
+};
+
+window.addEventListener('orderan:activity-changed', async (event) => {
   const detail = event.detail || {};
-  if (detail.eventType) captureGpsEvent(detail.eventType, detail.activityLogId || null);
+  if (detail.eventType) await captureGpsEvent(detail.eventType, detail.activityLogId || null);
+});
+
+document.getElementById('gpsCheckpointFab')?.addEventListener('click', async () => {
+  if (!gpsFabActivityId || gpsBusy) return;
+  await captureGpsEvent('manual', gpsFabActivityId);
 });
 
 window.captureGpsEvent = captureGpsEvent;
+
+(async function initializeGpsFab() {
+  try {
+    if (!user || !currentDay || typeof getActiveActivity !== 'function') return;
+    const active = await getActiveActivity();
+    window.updateGpsFab(active?.activity_type || 'offbid', active?.id || null);
+  } catch (error) {
+    console.warn('Gagal memuat status FAB GPS', error);
+  }
+})();
