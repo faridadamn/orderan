@@ -36,7 +36,7 @@
       <section class="stats-grid"><article class="stat-card"><span>Pagi</span><strong id="todayMorning">Rp0</strong><small id="morningTargetLabel">Target Rp50 rb</small></article><article class="stat-card"><span>Pulang</span><strong id="todayReturn">Rp0</strong><small id="returnTargetLabel">Target Rp120 rb</small></article><article class="stat-card"><span>Pengeluaran</span><strong id="todayExpense">Rp0</strong><small>Biaya hari ini</small></article><article class="stat-card accent"><span>Bersih</span><strong id="todayNet">Rp0</strong><small>Setelah biaya</small></article></section>
       <section class="quick-actions"><button id="addMorningBtn" class="quick-btn"><span>＋</span>Order pagi</button><button id="addReturnBtn" class="quick-btn"><span>⌂</span>Order pulang</button><button id="addExpenseBtn" class="quick-btn"><span>−</span>Biaya</button></section>
       <section class="card build-card"><div class="section-head compact"><div><p class="eyebrow">JALAN KELUAR OJOL</p><h3>Income lain</h3></div><button id="openBuildBtn" class="text-btn">Update</button></div><div class="build-row"><strong id="buildMinutes">0 menit</strong><span id="energyScore">Energi belum diisi</span></div><p id="buildOutput" class="muted">Belum ada output hari ini.</p></section>
-      <section class="section-head"><h3>Riwayat 7 hari</h3></section><div id="historyList" class="history-list"></div>
+      <section class="section-head"><h3>Riwayat 7 hari</h3><button id="openHistoryBtn" class="text-btn">Semua riwayat</button></section><div id="historyList" class="history-list"></div>
     </section>
   </main>
 
@@ -52,6 +52,7 @@
   <script src="session-fix.js?v=1"></script>
   <script src="timer.js?v=3"></script>
   <script src="gps.js?v=2"></script>
-  <script src="history-links.js?v=2"></script>
+  <script src="history-links.js?v=3"></script>
+  <script>document.getElementById('openHistoryBtn')?.addEventListener('click', () => { location.href = 'history.html'; });</script>
 </body>
 </html>
