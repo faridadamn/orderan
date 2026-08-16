@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Riwayat — Orderan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <style>
+    .history-tabs { display:flex; gap:6px; padding:4px; border:1px solid rgba(127,127,127,.18); border-radius:12px; }
+    .history-tabs .text-btn { padding:7px 10px; border-radius:8px; }
+    .history-tabs .text-btn.active { background:rgba(127,127,127,.12); }
+    .history-report-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-top:12px; }
+    @media (max-width:700px) { .history-report-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="app-view">
+      <header class="topbar">
+        <div><p class="eyebrow">ORDERAN</p><h1>Riwayat</h1></div>
+        <button id="backBtn" class="icon-btn" aria-label="Kembali">←</button>
+      </header>
+      <section class="card">
+        <div class="section-head compact">
+          <div><p class="eyebrow">ANALYTICS</p><h3>Periode laporan</h3></div>
+          <div class="history-tabs" role="tablist">
+            <button class="text-btn active" id="weeklyTab" type="button">Mingguan</button>
+            <button class="text-btn" id="monthlyTab" type="button">Bulanan</button>
+          </div>
+        </div>
+        <div id="periodList" class="history-list"></div>
+      </section>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="history-report.js?v=1"></script>
+</body>
+</html>
